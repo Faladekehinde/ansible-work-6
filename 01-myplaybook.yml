@@ -2,6 +2,7 @@
 - name: Ensure /opt/devops directory exists
   hosts: all
   become: true
+  
   tasks:
     - name: Create /opt/devops directory
       file:
