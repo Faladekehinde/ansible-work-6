@@ -9,10 +9,20 @@
       name: git
       state: present
 
+  - name: Remove old html folder
+    file:
+      path: /var/www/html
+      state: absent
+
   - name: Host code
     git:
       repo: https://github.com/CeeyIT-Solutions/food3.git
       dest: /var/www/html
+      version: main
       update: yes
-      force: yes 
-...           
+
+  - name: Restart Apache
+    service:
+      name: apache2
+      state: restarted
+...
