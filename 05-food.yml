@@ -18,7 +18,7 @@
     git:
       repo: https://github.com/CeeyIT-Solutions/food3.git
       dest: /var/www/html
-      version: main
+      version: master
       update: yes
 
   - name: Restart Apache
