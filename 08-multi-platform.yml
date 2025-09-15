@@ -1,43 +1,40 @@
 ---
 - name: Install HTTP server
-  hosts: g1
+  hosts: g1:g2
   become: yes
   
   tasks:
-  - name: Install HTTPD
+  - name: Install HTTPD on CentOS/RedHat/Amazon
     yum:
       name: httpd 
       state: present
-    when: ansible_distribution == "Amazon"  
+    when: ansible_distribution in ["Amazon", "RedHat", "CentOS"] 
 
-  - name: start httpd
-    service:
-      name: httpd
-      state: started
-    when: ansible_distribution == "Amazon" 
-
-  - name: Enabled httpd
-    service:
-      name: httpd
-      enabled: yes
-    when: ansible_distribution == "Amazon" 
-
-  - name: Install Apache2
+  - name: Install Apache2 on Debian/Ubuntu
     apt:
       name: apache2 
       state: present
-    when: ansible_distribution == "ubuntu" 
+    when: ansible_distribution in ["Ubuntu", "Debian"] 
 
-  - name: start Apache2
+  - name: Start and enable the web server
     service:
-      name: apache2
+      name: >-
+        {% if ansible_distribution in ["Debian", "Ubuntu"] %}
+        apache2
+        {% else %}
+        httpd
+        {% endif %}
       state: started
-    when: ansible_distribution == "ubuntu" 
+      enabled: yes
+ 
+  - name: Verify web server is responding
+    uri:
+      url: http://localhost
+      return_content: yes
+    register: web_response
 
-  - name: Enabled Apache2
-    service:
-      name: apache2
-      enabled: yes    
-    when: ansible_distribution == "ubuntu"           
-     
+  - name: Show web server response
+    debug:
+      msg: "Response: {{ web_response.status }} {{ web_response.msg }}"   
+          
 ...                
