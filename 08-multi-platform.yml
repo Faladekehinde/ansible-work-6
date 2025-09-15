@@ -1,40 +1,47 @@
 ---
 - name: Install HTTP server
-  hosts: g1:g2
+  hosts: all
   become: yes
-  
+
   tasks:
-  - name: Install HTTPD on CentOS/RedHat/Amazon
-    yum:
-      name: httpd 
-      state: present
-    when: ansible_distribution in ["Amazon", "RedHat", "CentOS"] 
+    - name: Install Apache2 on Debian/Ubuntu
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+      when: ansible_distribution in ["Debian", "Ubuntu"]
 
-  - name: Install Apache2 on Debian/Ubuntu
-    apt:
-      name: apache2 
-      state: present
-    when: ansible_distribution in ["Ubuntu", "Debian"] 
+    - name: Install HTTPD on RedHat/CentOS
+      yum:
+        name: httpd
+        state: present
+      when: ansible_distribution in ["RedHat", "CentOS"]
 
-  - name: Start and enable the web server
-    service:
-      name: >-
-        {% if ansible_distribution in ["Debian", "Ubuntu"] %}
-        apache2
-        {% else %}
-        httpd
-        {% endif %}
-      state: started
-      enabled: yes
- 
-  - name: Verify web server is responding
-    uri:
-      url: http://localhost
-      return_content: yes
-    register: web_response
+    - name: Install HTTPD on Amazon Linux 2023
+      dnf:
+        name: httpd
+        state: present
+      when: ansible_distribution == "Amazon"
 
-  - name: Show web server response
-    debug:
-      msg: "Response: {{ web_response.status }} {{ web_response.msg }}"   
-          
-...                
+    - name: Start and enable the web server
+      service:
+        name: >-
+          {% if ansible_distribution in ["Debian", "Ubuntu"] %}
+          apache2
+          {% else %}
+          httpd
+          {% endif %}
+        state: started
+        enabled: yes
+
+    - name: Verify web server is responding
+      uri:
+        url: http://localhost
+        return_content: yes
+      register: web_response
+
+    - name: Show web server response
+      debug:
+        msg: "Response: {{ web_response.status }} {{ web_response.msg }}"
+
+...        
