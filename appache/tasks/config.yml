@@ -1,13 +1,23 @@
 ---
+  - name: Deploy main index.html
+    copy:
+      dest: /var/www/html/index.html
+      content: "<h1>My Assignment from Ansible Apache Role!</h1>"
+      owner: "{{ apache_user }}"
+      group: "{{ apache_user }}"
+      mode: '0644'
+  
   - name: Update static page
     copy:
       src: static.html
       dest: /var/www/html/static.html
+      mode: '0644'
 
   - name: Update Dynamic page
     template:
       src: dynamic.j2
       dest: /var/www/html/dynamic.html
+      mode: '0644'  
 
 
 ...           
