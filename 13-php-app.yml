@@ -4,6 +4,6 @@
   become: yes
   
   roles:
-  - appache
-  - php
+    - appache
+    - php
 ...           
