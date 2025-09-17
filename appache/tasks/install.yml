@@ -35,4 +35,15 @@
       debug:
         msg: "Response: {{ web_response.status }} {{ web_response.msg }}"
 
+    - name: Verify web server is responding
+      uri:
+        url: http://localhost/index.html
+        return_content: yes
+      register: webpage
+
+    - name: Show webpage content
+      debug:
+        msg: "{{ webpage.content }}"
+      
+
 ...        
