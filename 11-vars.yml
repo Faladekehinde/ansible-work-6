@@ -7,7 +7,7 @@
   
   tasks:
   - name: Update Dynamic page
-    copy:
+    template:
       src: dynamic.j2
       dest: /var/www/html/dynamic.html
 
