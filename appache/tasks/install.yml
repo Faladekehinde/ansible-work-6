@@ -1,0 +1,38 @@
+---
+    - name: Install Apache2 on Debian/Ubuntu
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+      when: ansible_distribution in ["Debian", "Ubuntu"]
+
+    - name: Install HTTPD on RedHat/CentOS
+      yum:
+        name: httpd
+        state: present
+      when: ansible_distribution in ["RedHat", "CentOS"]
+
+    - name: Install HTTPD on Amazon
+      dnf:
+        name: httpd
+        state: present
+      when: ansible_distribution == "Amazon"
+
+    - name: Start and enable the web server
+      service:
+        name: "{{ 'apache2' if ansible_os_family == 'Debian' else 'httpd' }}"
+        state: started
+        enabled: yes
+
+
+    - name: Verify web server is responding
+      uri:
+        url: http://localhost
+        return_content: yes
+      register: web_response
+
+    - name: Show web server response
+      debug:
+        msg: "Response: {{ web_response.status }} {{ web_response.msg }}"
+
+...        
