@@ -17,7 +17,7 @@
         state: present
       when: ansible_distribution in ["RedHat", "CentOS"]
 
-    - name: Install HTTPD on Amazon Linux 2023
+    - name: Install HTTPD on Amazon
       dnf:
         name: httpd
         state: present
