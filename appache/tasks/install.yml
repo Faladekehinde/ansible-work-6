@@ -24,17 +24,6 @@
         state: started
         enabled: yes
 
-
-    - name: Verify web server is responding
-      uri:
-        url: http://localhost
-        return_content: yes
-      register: web_response
-
-    - name: Show web server response
-      debug:
-        msg: "Response: {{ web_response.status }} {{ web_response.msg }}"
-
     - name: Verify web server is responding
       uri:
         url: http://localhost/index.html
