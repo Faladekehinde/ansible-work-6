@@ -1,4 +1,4 @@
 ---
 # tasks file for appache
--import_tasks: Install.yml
--import_tasks: config.yml
+- import_tasks: Install.yml
+- import_tasks: config.yml
